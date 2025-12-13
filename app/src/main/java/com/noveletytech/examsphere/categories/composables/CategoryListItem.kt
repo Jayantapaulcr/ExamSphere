@@ -1,6 +1,5 @@
 package com.noveletytech.examsphere.categories.composables
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun CategoryListItem(name: String, imageUrl: String, questions: Int, modifier: Modifier = Modifier) {
+fun CategoryListItem(name: String, imageUrl: String, modifier: Modifier = Modifier) {
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(vertical = 4.dp)) {
@@ -27,10 +26,7 @@ fun CategoryListItem(name: String, imageUrl: String, questions: Int, modifier: M
                 modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.padding(start = 16.dp))
-            Column {
-                Text(text = name, style = MaterialTheme.typography.titleMedium)
-                Text(text = "$questions Questions", style = MaterialTheme.typography.bodySmall)
-            }
+            Text(text = name, style = MaterialTheme.typography.titleMedium)
         }
     }
 }

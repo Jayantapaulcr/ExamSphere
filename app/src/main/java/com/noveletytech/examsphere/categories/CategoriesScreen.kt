@@ -38,7 +38,6 @@ fun CategoriesScreen(
                 CategoryListItem(
                     name = category.name,
                     imageUrl = category.imageUrl,
-                    questions = category.questions,
                     modifier = Modifier.clickable { onCategoryClicked(category.key) }
                 )
             }

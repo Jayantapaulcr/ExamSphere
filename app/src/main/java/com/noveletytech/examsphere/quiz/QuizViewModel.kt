@@ -1,6 +1,7 @@
 package com.noveletytech.examsphere.quiz
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.noveletytech.examsphere.data.Question
 import com.noveletytech.examsphere.data.QuizRepository
@@ -16,7 +17,12 @@ data class QuizUiState(
     val isLoading: Boolean = true
 )
 
-class QuizViewModel(private val categoryId: String) : ViewModel() {
+class QuizViewModel(
+    private val categoryId: String, 
+    private val branchId: String, 
+    private val subjectId: String,
+    private val questionType: String
+) : ViewModel() {
 
     private val repository = QuizRepository()
 
@@ -29,7 +35,12 @@ class QuizViewModel(private val categoryId: String) : ViewModel() {
 
     private fun fetchQuestions() {
         viewModelScope.launch {
-            val questions = repository.getQuestions(categoryId)
+            val questions = when (questionType) {
+                "mcq" -> repository.getMcqQuestions(categoryId, branchId, subjectId)
+                "saq" -> repository.getSaqQuestions(categoryId, branchId, subjectId)
+                "laq" -> repository.getLaqQuestions(categoryId, branchId, subjectId)
+                else -> emptyList()
+            }
             _uiState.value = _uiState.value.copy(questions = questions, isLoading = false)
         }
     }
@@ -58,11 +69,43 @@ class QuizViewModel(private val categoryId: String) : ViewModel() {
         val selectedAnswers = _uiState.value.selectedAnswers
 
         for (i in questions.indices) {
-            if (selectedAnswers[i] == questions[i].answer) {
-                score++
+            val question = questions[i]
+            val userAnswer = selectedAnswers[i]
+
+            if (userAnswer != null) {
+                when (question) {
+                    is Question.MCQ -> {
+                        if (userAnswer == question.correctAnswer) {
+                            score++
+                        }
+                    }
+                    is Question.SAQ -> {
+                        if (userAnswer.equals(question.correctAnswer, ignoreCase = true)) {
+                            score++
+                        }
+                    }
+                    is Question.LAQ -> {
+                        // Long answer questions are not auto-scored
+                    }
+                }
             }
         }
         _uiState.value = _uiState.value.copy(score = score)
         return score
+    }
+}
+
+class QuizViewModelFactory(
+    private val categoryId: String,
+    private val branchId: String,
+    private val subjectId: String,
+    private val questionType: String
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(QuizViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return QuizViewModel(categoryId, branchId, subjectId, questionType) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

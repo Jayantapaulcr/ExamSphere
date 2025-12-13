@@ -11,8 +11,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android.supportsRtl="true"
+        android:supportsRtl="true"
         android:theme="@style/Theme.ExamSphere">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7065743985138066~6458565667"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
