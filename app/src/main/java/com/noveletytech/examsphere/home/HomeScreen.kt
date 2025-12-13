@@ -37,7 +37,7 @@ import com.noveletytech.examsphere.home.composables.RecentActivityItem
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier, 
-    onPlayClicked: () -> Unit,
+    onPlayClicked: (String) -> Unit,
     onSeeAllClicked: () -> Unit,
     viewModel: HomeViewModel = viewModel()
 ) {
@@ -66,7 +66,7 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = onPlayClicked) {
+                    Button(onClick = { onPlayClicked(categories.firstOrNull()?.key ?: "") }) {
                         Text(text = "Play Now")
                     }
                 }
@@ -99,9 +99,9 @@ fun HomeScreen(
         LazyRow(modifier = Modifier.fillMaxWidth()) {
             items(categories, key = { it.key }) { category ->
                 CategoryItem(
-                    icon = category.icon, 
+                    imageUrl = category.imageUrl, 
                     name = category.name,
-                    modifier = Modifier.clickable { viewModel.onCategoryClicked(category) }
+                    modifier = Modifier.clickable { onPlayClicked(category.key) }
                 )
             }
         }
@@ -113,6 +113,7 @@ fun HomeScreen(
                 val progress = if (activity.total > 0) activity.score.toFloat() / activity.total.toFloat() else 0f
                 RecentActivityItem(
                     name = activity.name, 
+                    imageUrl = activity.imageUrl,
                     questions = activity.questions, 
                     score = "${activity.score}/${activity.total}",
                     progress = progress

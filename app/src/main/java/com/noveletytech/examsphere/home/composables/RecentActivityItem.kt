@@ -15,13 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 @Composable
-fun RecentActivityItem(name: String, questions: Int, score: String, progress: Float) {
+fun RecentActivityItem(name: String, imageUrl: String, questions: Int, score: String, progress: Float) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 4.dp)) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = name,
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(modifier = Modifier.padding(start = 16.dp))
             Column {
                 Text(text = name, style = MaterialTheme.typography.titleMedium)
                 Text(text = "$questions Question", style = MaterialTheme.typography.bodySmall)

@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import com.noveletytech.examsphere.categories.CategoriesScreen
 import com.noveletytech.examsphere.favorites.FavoritesScreen
 import com.noveletytech.examsphere.home.HomeScreen
@@ -35,12 +37,14 @@ fun AppNavigation(navController: NavHostController, paddingValues: PaddingValues
         ) {
             composable(Screens.HOME_SCREEN) {
                 HomeScreen(
-                    onPlayClicked = { navController.navigate(Graph.DETAILS) },
+                    onPlayClicked = { categoryId -> navController.navigate("${Graph.DETAILS}/$categoryId") },
                     onSeeAllClicked = { navController.navigate(Screens.CATEGORIES_SCREEN) }
                 )
             }
             composable(Screens.CATEGORIES_SCREEN) {
-                CategoriesScreen()
+                CategoriesScreen(
+                    onCategoryClicked = { categoryId -> navController.navigate("${Graph.DETAILS}/$categoryId") }
+                )
             }
             composable(Screens.FAVORITES_SCREEN) {
                 FavoritesScreen()
@@ -51,11 +55,13 @@ fun AppNavigation(navController: NavHostController, paddingValues: PaddingValues
         }
 
         navigation(
-            route = Graph.DETAILS,
-            startDestination = Screens.QUIZ_SCREEN
+            route = "${Graph.DETAILS}/{categoryId}",
+            startDestination = Screens.QUIZ_SCREEN,
+            arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
         ) {
-            composable(Screens.QUIZ_SCREEN) {
-                QuizScreen(onSeeResult = {
+            composable(Screens.QUIZ_SCREEN) { backStackEntry ->
+                val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
+                QuizScreen(categoryId = categoryId, onSeeResult = {
                     navController.navigate(Screens.RESULT_SCREEN)
                 })
             }

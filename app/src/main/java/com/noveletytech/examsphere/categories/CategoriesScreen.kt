@@ -1,5 +1,6 @@
 package com.noveletytech.examsphere.categories
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.noveletytech.examsphere.categories.composables.CategoryListItem
 
 @Composable
-fun CategoriesScreen(viewModel: CategoriesViewModel = viewModel()) {
+fun CategoriesScreen(
+    onCategoryClicked: (String) -> Unit,
+    viewModel: CategoriesViewModel = viewModel()
+) {
     val categories by viewModel.categories.collectAsState()
 
     Column(
@@ -33,8 +37,9 @@ fun CategoriesScreen(viewModel: CategoriesViewModel = viewModel()) {
             items(categories, key = { it.key }) { category ->
                 CategoryListItem(
                     name = category.name,
-                    icon = category.icon,
-                    questions = category.questions
+                    imageUrl = category.imageUrl,
+                    questions = category.questions,
+                    modifier = Modifier.clickable { onCategoryClicked(category.key) }
                 )
             }
         }
