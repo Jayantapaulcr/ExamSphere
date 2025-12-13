@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "734617860228",
+    "project_id": "examsphere-0777pass77",
+    "storage_bucket": "examsphere-0777pass77.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734617860228:android:6daebda66e2871fde1aad1",
+        "android_client_info": {
+          "package_name": "com.noveletytech.examsphere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8xdErLL15x-JG9cFQFpiLFjnQC8AJWBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

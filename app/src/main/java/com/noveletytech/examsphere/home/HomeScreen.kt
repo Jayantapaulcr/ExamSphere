@@ -66,7 +66,12 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { onPlayClicked(categories.firstOrNull()?.key ?: "") }) {
+                    Button(onClick = { 
+                        categories.firstOrNull()?.let {
+                            viewModel.addCategoryToRecents(it)
+                            onPlayClicked(it.key)
+                        }
+                    }) {
                         Text(text = "Play Now")
                     }
                 }
@@ -101,7 +106,10 @@ fun HomeScreen(
                 CategoryItem(
                     imageUrl = category.imageUrl, 
                     name = category.name,
-                    modifier = Modifier.clickable { onPlayClicked(category.key) }
+                    modifier = Modifier.clickable { 
+                        viewModel.addCategoryToRecents(category)
+                        onPlayClicked(category.key)
+                    }
                 )
             }
         }

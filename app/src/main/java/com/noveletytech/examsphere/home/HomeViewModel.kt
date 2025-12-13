@@ -21,7 +21,6 @@ class HomeViewModel : ViewModel() {
 
     init {
         fetchCategories()
-        // You can also fetch recent activities here if they are stored in Firestore
     }
 
     private fun fetchCategories() {
@@ -30,10 +29,19 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun onCategoryClicked(category: Category) {
-        val newActivity = RecentActivity("${category.key}_activity", category.name, category.imageUrl, 30, 0, 30)
+    fun addCategoryToRecents(category: Category) {
+        val newActivity = RecentActivity(
+            key = "${category.key}_activity",
+            name = category.name,
+            imageUrl = category.imageUrl,
+            questions = 0, // This should be updated after a quiz is taken
+            score = 0, 
+            total = 0
+        )
+
         val currentActivities = _recentActivities.value.toMutableList()
 
+        // Remove any existing activity with the same name and add the new one to the top
         currentActivities.removeAll { it.name == newActivity.name }
         currentActivities.add(0, newActivity)
 

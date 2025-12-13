@@ -16,7 +16,7 @@ data class QuizUiState(
     val isLoading: Boolean = true
 )
 
-class QuizViewModel(private val categoryId: String) : ViewModel() {
+class QuizViewModel(private val categoryId: String, private val subCategoryId: String) : ViewModel() {
 
     private val repository = QuizRepository()
 
@@ -29,8 +29,10 @@ class QuizViewModel(private val categoryId: String) : ViewModel() {
 
     private fun fetchQuestions() {
         viewModelScope.launch {
-            val questions = repository.getQuestions(categoryId)
-            _uiState.value = _uiState.value.copy(questions = questions, isLoading = false)
+            val mcqs = repository.getMcqQuestions(categoryId, subCategoryId)
+            val saqs = repository.getSaqQuestions(categoryId, subCategoryId)
+            val laqs = repository.getLaqQuestions(categoryId, subCategoryId)
+            _uiState.value = _uiState.value.copy(questions = mcqs + saqs + laqs, isLoading = false)
         }
     }
 
@@ -58,7 +60,13 @@ class QuizViewModel(private val categoryId: String) : ViewModel() {
         val selectedAnswers = _uiState.value.selectedAnswers
 
         for (i in questions.indices) {
-            if (selectedAnswers[i] == questions[i].answer) {
+            val question = questions[i]
+            val correctAnswer = when (question) {
+                is Question.MCQ -> question.correctAnswer
+                is Question.SAQ -> question.correctAnswer
+                is Question.LAQ -> "" // LAQs are not auto-scored
+            }
+            if (selectedAnswers[i] == correctAnswer) {
                 score++
             }
         }
