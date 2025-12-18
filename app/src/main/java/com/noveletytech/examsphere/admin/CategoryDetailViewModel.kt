@@ -1,4 +1,4 @@
-package com.noveletytech.examsphere.subcategory
+package com.noveletytech.examsphere.admin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class SubCategoryViewModel(private val categoryId: String) : ViewModel() {
+class CategoryDetailViewModel(private val categoryId: String) : ViewModel() {
 
     private val repository = QuizRepository()
 
@@ -20,18 +20,18 @@ class SubCategoryViewModel(private val categoryId: String) : ViewModel() {
         fetchSubCategories()
     }
 
-    private fun fetchSubCategories() {
+    fun fetchSubCategories() {
         viewModelScope.launch {
             _subCategories.value = repository.getSubCategories(categoryId)
         }
     }
 }
 
-class SubCategoryViewModelFactory(private val categoryId: String) : ViewModelProvider.Factory {
+class CategoryDetailViewModelFactory(private val categoryId: String) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SubCategoryViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(CategoryDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SubCategoryViewModel(categoryId) as T
+            return CategoryDetailViewModel(categoryId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
